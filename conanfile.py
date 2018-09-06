@@ -37,12 +37,7 @@ class OGREConan(ConanFile):
         tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
         tools.download("https://raw.githubusercontent.com/RigsOfRods/ror-dependencies/master/patches/OgreTerrain.cpp", "Components/Terrain/src/OgreTerrain.cpp", overwrite=True)
         tools.download("https://raw.githubusercontent.com/RigsOfRods/ror-dependencies/master/patches/OgreD3D9Prerequisites.h", "RenderSystems/Direct3D9/include/OgreD3D9Prerequisites.h", overwrite=True)
-        tools.get("http://prdownloads.sourceforge.net/rigs-of-rods/win32-directx.zip", destination="win32-directx")
-        tools.replace_in_file("RenderSystems/Direct3D9/CMakeLists.txt", "add_definitions(-D_USRDLL)",
-        '''
-        add_definitions(-D_USRDLL)
-        include_directories(${DirectX9_BUNDLED_INCLUDE_DIR})
-        ''')
+		
     def build(self):
         cmake = CMake(self)
         cmake.definitions['OGREDEPS_BUILD_AMD_QBS'] = 'OFF'
@@ -53,9 +48,6 @@ class OGREConan(ConanFile):
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D9'] = 'ON'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D11'] = 'OFF'  # TODO
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_GL3PLUS'] = 'OFF'
-        cmake.definitions['DirectX9_D3DX9_LIBRARY'] = 'win32-directx/lib/x86/d3dx9.lib'  # Add bundled DirectX libs
-        cmake.definitions['DirectX9_DXERR_LIBRARY'] = 'win32-directx/lib/x86/DxErr.lib'  # Add bundled DirectX libs
-        cmake.definitions['DirectX9_BUNDLED_INCLUDE_DIR'] = 'win32-directx/include'      # Add bundled DirectX headers; requires modified CMakeLists.txt
         cmake.configure()
         cmake.build()
 
