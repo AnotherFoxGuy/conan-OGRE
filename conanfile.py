@@ -37,7 +37,7 @@ class OGREConan(ConanFile):
         tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
         tools.download("https://raw.githubusercontent.com/RigsOfRods/ror-dependencies/master/patches/OgreTerrain.cpp", "Components/Terrain/src/OgreTerrain.cpp", overwrite=True)
         tools.download("https://raw.githubusercontent.com/RigsOfRods/ror-dependencies/master/patches/OgreD3D9Prerequisites.h", "RenderSystems/Direct3D9/include/OgreD3D9Prerequisites.h", overwrite=True)
-		
+
     def build(self):
         cmake = CMake(self)
         cmake.definitions['OGREDEPS_BUILD_AMD_QBS'] = 'OFF'
@@ -56,4 +56,9 @@ class OGREConan(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["OGRE"]
+        self.cpp_info.libdirs = ['lib', 'lib/release', 'lib/debug']	 # Directories where libraries can be found
+        self.cpp_info.libs = tools.collect_libs(self)
+        if self.settings.build_type == "Release":
+            self.cpp_info.libs.extend(tools.collect_libs(self, folder="lib/release"))
+        else:
+            self.cpp_info.libs.extend(tools.collect_libs(self, folder="lib/debug"))
