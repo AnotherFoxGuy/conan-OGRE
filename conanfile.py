@@ -40,11 +40,7 @@ class OGREConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.definitions['OGREDEPS_BUILD_AMD_QBS'] = 'OFF'
         cmake.definitions['OGRE_BUILD_SAMPLES'] = 'OFF'
-        cmake.definitions['OGRE_BUILD_COMPONENT_VOLUME'] = 'OFF'
-        cmake.definitions['OGRE_BUILD_PLUGIN_BSP'] = 'OFF'
-        cmake.definitions['OGRE_BUILD_PLUGIN_PCZ'] = 'OFF'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D9'] = 'ON'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D11'] = 'OFF'  # TODO
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_GL3PLUS'] = 'OFF'
