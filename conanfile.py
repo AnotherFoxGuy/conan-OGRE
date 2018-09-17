@@ -3,7 +3,7 @@ from conans.tools import os_info, SystemPackageTool
 
 class OGREConan(ConanFile):
     name = "OGRE"
-    version = "1.9.1"
+    version = "1.11.2"
     license = "MIT"
     url = "https://github.com/AnotherFoxGuy/conan-OGRE"
     description = "scene-oriented, flexible 3D engine written in C++"
@@ -33,10 +33,9 @@ class OGREConan(ConanFile):
             self.requires.add('OGREdeps/2018-07@anotherfoxguy/stable')
 
     def source(self):
-        self.run("git clone --branch v1.9.1 --depth 1 https://github.com/OGRECave/ogre.git . ")
+        git = tools.Git()
+        git.clone("https://github.com/OGRECave/ogre.git", "v1.11.2")
         tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
-        tools.download("https://raw.githubusercontent.com/RigsOfRods/ror-dependencies/master/patches/OgreTerrain.cpp", "Components/Terrain/src/OgreTerrain.cpp", overwrite=True)
-        tools.download("https://raw.githubusercontent.com/RigsOfRods/ror-dependencies/master/patches/OgreD3D9Prerequisites.h", "RenderSystems/Direct3D9/include/OgreD3D9Prerequisites.h", overwrite=True)
 
     def build(self):
         cmake = CMake(self)
