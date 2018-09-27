@@ -4,7 +4,7 @@ env:
      - CONAN_REFERENCE: "OGRE/1.11.2"
      - CONAN_USERNAME: "anotherfoxguy"
      - CONAN_LOGIN_USERNAME: "anotherfoxguy"
-     - CONAN_CHANNEL: "OGRE"
+     - CONAN_CHANNEL: "testing"
      - CONAN_UPLOAD: "https://api.bintray.com/conan/anotherfoxguy/ror-dependencies"
 
 linux: &linux
