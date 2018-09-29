@@ -36,6 +36,9 @@ class OGREConan(ConanFile):
         git = tools.Git()
         git.clone("https://github.com/OGRECave/ogre.git", "v1.11.2")
         tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
+        tools.replace_in_file("Components/Overlay/CMakeLists.txt",
+        '''target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE "${FREETYPE_LIBRARIES}" "${ZLIB_LIBRARIES}")''',
+        '''target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE ZLIB::ZLIB Freetype::Freetype )''')
 
     def build(self):
         cmake = CMake(self)
@@ -44,6 +47,7 @@ class OGREConan(ConanFile):
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D11'] = 'ON'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_GL3PLUS'] = 'OFF'
         cmake.definitions['OGRE_RESOURCEMANAGER_STRICT'] = 0
+        cmake.definitions['OGRE_INSTALL_SAMPLES'] = 'OFF'
         cmake.configure()
         cmake.build()
 
