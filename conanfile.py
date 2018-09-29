@@ -44,6 +44,7 @@ class OGREConan(ConanFile):
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D9'] = 'ON'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D11'] = 'OFF'  # TODO
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_GL3PLUS'] = 'OFF'
+        cmake.definitions['OGRE_INSTALL_SAMPLES'] = 'OFF'
         cmake.configure()
         cmake.build()
 
