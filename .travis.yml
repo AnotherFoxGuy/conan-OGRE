@@ -8,6 +8,7 @@ env:
      - CONAN_UPLOAD: "https://api.bintray.com/conan/anotherfoxguy/ror-dependencies"
 
 linux: &linux
+   dist: xenial
    os: linux
    sudo: required
    language: python
