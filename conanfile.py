@@ -55,7 +55,3 @@ class OGREConan(ConanFile):
     def package_info(self):
         self.cpp_info.libdirs = ['lib', 'lib/release', 'lib/debug']	 # Directories where libraries can be found
         self.cpp_info.libs = tools.collect_libs(self)
-        if self.settings.build_type == "Release":
-            self.cpp_info.libs.extend(tools.collect_libs(self, folder="lib/release"))
-        else:
-            self.cpp_info.libs.extend(tools.collect_libs(self, folder="lib/debug"))
