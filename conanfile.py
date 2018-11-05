@@ -3,7 +3,7 @@ from conans.tools import os_info, SystemPackageTool
 
 class OGREConan(ConanFile):
     name = "OGRE"
-    version = "1.11.2"
+    version = "1.11.3"
     license = "MIT"
     url = "https://github.com/AnotherFoxGuy/conan-OGRE"
     description = "scene-oriented, flexible 3D engine written in C++"
@@ -15,10 +15,7 @@ class OGREConan(ConanFile):
             if os_info.with_apt:
                 installer = SystemPackageTool()
                 installer.install("xorg-dev")
-                installer.install("libfreetype6-dev")
                 installer.install("libfreeimage-dev")
-                installer.install("libzzip-dev")
-                installer.install("libois-dev")
                 installer.install("libgl1-mesa-dev")
                 installer.install("libglu1-mesa-dev")
                 installer.install("nvidia-cg-toolkit")
@@ -34,14 +31,15 @@ class OGREConan(ConanFile):
 
     def source(self):
         git = tools.Git()
-        git.clone("https://github.com/OGRECave/ogre.git", "v1.11.2")
+        git.clone("https://github.com/OGRECave/ogre.git", "v1.11.3")
         tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
         tools.replace_in_file("Components/Overlay/CMakeLists.txt",
-        '''target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE "${FREETYPE_LIBRARIES}" "${ZLIB_LIBRARIES}")''',
-        '''target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE ZLIB::ZLIB Freetype::Freetype )''')
+        '''target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE "${FREETYPE_LIBRARIES}" ZLIB::ZLIB)''',
+        '''target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE Freetype::Freetype ZLIB::ZLIB)''')
 
     def build(self):
         cmake = CMake(self)
+        cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
         cmake.definitions['OGRE_BUILD_SAMPLES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D9'] = 'ON'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D11'] = 'ON'
@@ -52,6 +50,11 @@ class OGREConan(ConanFile):
         cmake.build()
 
     def package(self):
+        self.copy("*.h", dst="include", src="Dependencies/include")
+        self.copy("*.lib", dst="lib", src="Dependencies", keep_path=False)
+        self.copy("*.dll", dst="bin", src="Dependencies", keep_path=False)
+        self.copy("*.so*", dst="lib", src="Dependencies", keep_path=False)
+        self.copy("*.a*", dst="lib", src="Dependencies", keep_path=False)
         cmake = CMake(self)
         cmake.install()
 
