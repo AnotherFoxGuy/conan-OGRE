@@ -26,19 +26,25 @@ class OGREConan(ConanFile):
 
 
     def requirements(self):
-        if os_info.is_windows:
-            self.requires.add('OGREdeps/2018-07@anotherfoxguy/stable')
+        self.requires.add('OGREdeps/2018-07@anotherfoxguy/stable')
 
     def source(self):
         git = tools.Git()
         git.clone("https://github.com/OGRECave/ogre.git")
         tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
+        tools.replace_in_file("CMake/Packages/FindZZip.cmake",
+         "set(ZZip_LIBRARY_NAMES zziplib zzip)",
+         "set(ZZip_LIBRARY_NAMES zziplib zzip libzziplib)")
+        tools.replace_in_file("CMake/Dependencies.cmake",
+        '''set(OGRE_DEPENDENCIES_DIR "" CACHE PATH "Path to prebuilt OGRE dependencies")''',
+        '''set(OGRE_DEPENDENCIES_DIR ${CMAKE_PREFIX_PATH})''')
         tools.replace_in_file("Components/Overlay/CMakeLists.txt",
         '''target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE "${FREETYPE_LIBRARIES}" ZLIB::ZLIB)''',
         '''target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE Freetype::Freetype ZLIB::ZLIB)''')
 
     def build(self):
         cmake = CMake(self)
+        cmake.definitions['OGRE_BUILD_DEPENDENCIES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
         cmake.definitions['OGRE_BUILD_SAMPLES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D9'] = 'ON'
@@ -50,11 +56,6 @@ class OGREConan(ConanFile):
         cmake.build()
 
     def package(self):
-        self.copy("*.h", dst="include", src="Dependencies/include")
-        self.copy("*.lib", dst="lib", src="Dependencies", keep_path=False)
-        self.copy("*.dll", dst="bin", src="Dependencies", keep_path=False)
-        self.copy("*.so*", dst="lib", src="Dependencies", keep_path=False)
-        self.copy("*.a*", dst="lib", src="Dependencies", keep_path=False)
         cmake = CMake(self)
         cmake.install()
 
