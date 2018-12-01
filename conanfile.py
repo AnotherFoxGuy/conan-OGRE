@@ -30,7 +30,7 @@ class OGREConan(ConanFile):
 
     def source(self):
         git = tools.Git()
-        git.clone("https://github.com/OGRECave/ogre.git")
+        git.clone("https://github.com/OGRECave/ogre.git", "v1.11.4")
         tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
         tools.replace_in_file("CMake/Packages/FindZZip.cmake",
             "set(ZZip_LIBRARY_NAMES zziplib zzip)",
