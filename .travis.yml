@@ -6,6 +6,7 @@ env:
      - CONAN_LOGIN_USERNAME: "anotherfoxguy"
      - CONAN_CHANNEL: "testing"
      - CONAN_UPLOAD: "https://api.bintray.com/conan/anotherfoxguy/ror-dependencies"
+     - CONAN_REMOTES: "https://api.bintray.com/conan/anotherfoxguy/OGRE-dependencies"
 
 linux: &linux
    dist: xenial

@@ -9,6 +9,12 @@ class OGREConan(ConanFile):
     description = "scene-oriented, flexible 3D engine written in C++"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_paths"
+    requires = ("GC/3.1@AnotherFoxGuy/stable",
+                "freetype/2.9.0@bincrafters/stable",
+                "FreeImage/3.18.0@AnotherFoxGuy/stable",
+                "sdl2/2.0.9@bincrafters/stable",
+                "zlib/1.2.11@conan/stable",
+                "libZZIP/0.13.63@AnotherFoxGuy/stable")
 
     def system_requirements(self):
         if os_info.is_linux:
@@ -23,10 +29,6 @@ class OGREConan(ConanFile):
                 installer.install("libx11-dev")
                 installer.install("libxt-dev")
                 installer.install("libxaw7-dev")
-
-
-    def requirements(self):
-        self.requires.add('OGREdeps/2018-07@anotherfoxguy/stable')
 
     def source(self):
         git = tools.Git()
@@ -54,7 +56,7 @@ class OGREConan(ConanFile):
         cmake.definitions['OGRE_BUILD_SAMPLES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D9'] = 'ON'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D11'] = 'ON'
-        cmake.definitions['OGRE_BUILD_RENDERSYSTEM_GL3PLUS'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_RENDERSYSTEM_GL3PLUS'] = 'ON'
         cmake.definitions['OGRE_RESOURCEMANAGER_STRICT'] = 0
         cmake.definitions['OGRE_INSTALL_SAMPLES'] = 'OFF'
         cmake.configure()

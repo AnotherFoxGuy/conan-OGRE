@@ -10,6 +10,7 @@ environment:
     CONAN_LOGIN_USERNAME: "anotherfoxguy"
     CONAN_CHANNEL: "testing"
     CONAN_UPLOAD: "https://api.bintray.com/conan/anotherfoxguy/ror-dependencies"
+    CONAN_REMOTES: "https://api.bintray.com/conan/anotherfoxguy/OGRE-dependencies"
 
     matrix:
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
