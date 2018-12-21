@@ -32,6 +32,9 @@ class OGREConan(ConanFile):
         git = tools.Git()
         git.clone("https://github.com/OGRECave/ogre.git", "v1.11.5")
         tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
+        tools.replace_in_file("CMake/Packages/FindFreeImage.cmake",
+            "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib)",
+            "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib libFreeImage)")
         tools.replace_in_file("CMake/Packages/FindZZip.cmake",
             "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0)",
             "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0 libzziplib)")
