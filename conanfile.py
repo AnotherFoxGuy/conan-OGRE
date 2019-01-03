@@ -44,7 +44,13 @@ class OGREConan(ConanFile):
         tools.replace_in_file("CMake/Utils/FindPkgMacros.cmake",
             'set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})',
             'set(${PREFIX} ${${PREFIX}_REL} ${${PREFIX}_DBG})')
-
+        tools.patch(patch_string='''
+--- OgreMain/src/OgreScriptLexer.cpp
++++ OgreMain/src/OgreScriptLexer.cpp
+@@ -82 +82 @@
+- return tokens;
++ braceLayer = 1;
+             ''')
 
     def build(self):
         cmake = CMake(self)
