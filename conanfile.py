@@ -3,7 +3,7 @@ from conans.tools import os_info, SystemPackageTool
 
 class OGREConan(ConanFile):
     name = "OGRE"
-    version = "1.11.5"
+    version = "1.11.6"
     license = "MIT"
     url = "https://github.com/AnotherFoxGuy/conan-OGRE"
     description = "scene-oriented, flexible 3D engine written in C++"
@@ -30,7 +30,7 @@ class OGREConan(ConanFile):
 
     def source(self):
         git = tools.Git()
-        git.clone("https://github.com/OGRECave/ogre.git", "v1.11.5")
+        git.clone("https://github.com/OGRECave/ogre.git", "v1.11.6")
         tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
         tools.replace_in_file("CMake/Packages/FindFreeImage.cmake",
             "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib)",
