@@ -55,6 +55,9 @@ class OGREConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.definitions['OGRE_BUILD_DEPENDENCIES'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_COMPONENT_CSHARP'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_COMPONENT_JAVA'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
         cmake.definitions['OGRE_BUILD_PLUGIN_STBI'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
         cmake.definitions['OGRE_BUILD_SAMPLES'] = 'OFF'
