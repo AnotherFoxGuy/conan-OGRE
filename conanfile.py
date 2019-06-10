@@ -66,6 +66,7 @@ class OGREConan(ConanFile):
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_GL3PLUS'] = 'OFF'
         cmake.definitions['OGRE_RESOURCEMANAGER_STRICT'] = 0
         cmake.definitions['OGRE_INSTALL_SAMPLES'] = 'OFF'
+        cmake.definitions['CMAKE_CXX_FLAGS'] = '-D_OGRE_FILESYSTEM_ARCHIVE_UNICODE'
         cmake.configure()
         cmake.build()
 
