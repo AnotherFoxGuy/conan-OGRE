@@ -8,6 +8,7 @@ class OGREConan(ConanFile):
     url = "https://github.com/AnotherFoxGuy/conan-OGRE"
     description = "scene-oriented, flexible 3D engine written in C++"
     settings = "os", "compiler", "build_type", "arch"
+    exports_sources = "win32-directx/*"
     generators = "cmake_paths"
 
     def system_requirements(self):
@@ -68,6 +69,8 @@ class OGREConan(ConanFile):
         cmake.definitions['OGRE_INSTALL_SAMPLES'] = 'OFF'
         if os_info.is_windows:
             cmake.definitions['CMAKE_CXX_FLAGS'] = '-D_OGRE_FILESYSTEM_ARCHIVE_UNICODE'
+            cmake.definitions['DirectX9_D3DX9_LIBRARY'] = 'win32-directx/lib/x86/d3dx9.lib'
+            cmake.definitions['DirectX9_DXERR_LIBRARY'] = 'win32-directx/lib/x86/DxErr.lib'
         cmake.configure()
         cmake.build()
 
