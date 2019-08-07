@@ -1,7 +1,7 @@
 
 env:
    global:
-     - CONAN_REFERENCE: "OGRE/1.11.6"
+     - CONAN_REFERENCE: "OGRE/1.11.6-with-patches"
      - CONAN_USERNAME: "anotherfoxguy"
      - CONAN_LOGIN_USERNAME: "anotherfoxguy"
      - CONAN_CHANNEL: "testing"
@@ -20,10 +20,6 @@ osx: &osx
    language: generic
 matrix:
    include:
-      - <<: *linux
-        env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Debug
-      - <<: *linux
-        env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Release
       - <<: *linux
         env: CONAN_GCC_VERSIONS=6 CONAN_DOCKER_IMAGE=conanio/gcc6 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Debug
       - <<: *linux

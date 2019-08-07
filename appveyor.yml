@@ -3,7 +3,7 @@ build:                            false
 environment:
     PYTHON:                       "C:\\Python37"
 
-    CONAN_REFERENCE:              "OGRE/1.11.6"
+    CONAN_REFERENCE:              "OGRE/1.11.6-with-patches"
     CONAN_USERNAME:               "anotherfoxguy"
     CONAN_LOGIN_USERNAME:         "anotherfoxguy"
     CONAN_CHANNEL:                "testing"
@@ -30,11 +30,11 @@ build_script:
     iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 
     scoop bucket add Ash258 https://github.com/Ash258/scoop-Ash258.git
-    
+
     MsiExec.exe /passive /X{F0C3E5D1-1ADE-321E-8167-68EF0DE699A5}
-    
+
     MsiExec.exe /passive /X{1D8E6291-B0D5-35EC-8441-6616F567A0F7}
-    
+
     scoop install DirectX-SDK
 
 test_script:

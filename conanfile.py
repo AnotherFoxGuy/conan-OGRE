@@ -3,12 +3,13 @@ from conans.tools import os_info, SystemPackageTool
 
 class OGREConan(ConanFile):
     name = "OGRE"
-    version = "1.11.6"
+    version = "1.11.6-with-patches"
     license = "MIT"
     url = "https://github.com/AnotherFoxGuy/conan-OGRE"
     description = "scene-oriented, flexible 3D engine written in C++"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_paths"
+    requires = "OGREdeps/2019-04@anotherfoxguy/stable"
 
     def system_requirements(self):
         if os_info.is_linux:
@@ -24,13 +25,9 @@ class OGREConan(ConanFile):
                 installer.install("libxt-dev")
                 installer.install("libxaw7-dev")
 
-
-    def requirements(self):
-        self.requires.add('OGREdeps/2018-07@anotherfoxguy/stable')
-
     def source(self):
         git = tools.Git()
-        git.clone("https://github.com/OGRECave/ogre.git", "v1.11.6")
+        git.clone("https://github.com/only-a-ptr/ogre.git", "v1.11.6-with-patches")
         tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
         tools.replace_in_file("CMake/Packages/FindFreeImage.cmake",
             "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib)",
