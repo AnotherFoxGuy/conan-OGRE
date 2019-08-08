@@ -9,7 +9,6 @@ class OGREConan(ConanFile):
     description = "scene-oriented, flexible 3D engine written in C++"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_paths"
-    requires = "OGREdeps/2019-04@anotherfoxguy/stable"
 
     def system_requirements(self):
         if os_info.is_linux:
@@ -24,6 +23,9 @@ class OGREConan(ConanFile):
                 installer.install("libx11-dev")
                 installer.install("libxt-dev")
                 installer.install("libxaw7-dev")
+                
+    def requirements(self):
+        self.requires.add('OGREdeps/2018-07@anotherfoxguy/stable')
 
     def source(self):
         git = tools.Git()
@@ -41,6 +43,11 @@ class OGREConan(ConanFile):
         tools.replace_in_file("CMake/Utils/FindPkgMacros.cmake",
             'set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})',
             'set(${PREFIX} ${${PREFIX}_REL} ${${PREFIX}_DBG})')
+        tools.replace_in_file("CMakeLists.txt", "# Set up the basic build environment", 
+                              '''
+                              find_library(ZLIB_LIBRARY NAMES zlib zlib_d PATH_SUFFIXES lib)
+                              find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib)
+                              ''')
         tools.patch(patch_string='''
 --- OgreMain/src/OgreScriptLexer.cpp
 +++ OgreMain/src/OgreScriptLexer.cpp
@@ -56,7 +63,7 @@ class OGREConan(ConanFile):
         cmake.definitions['OGRE_BUILD_COMPONENT_JAVA'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
         cmake.definitions['OGRE_BUILD_PLUGIN_STBI'] = 'OFF'
-        cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_COMPONENT_BITES'] = 'ON'
         cmake.definitions['OGRE_BUILD_SAMPLES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D9'] = 'ON'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D11'] = 'ON'
