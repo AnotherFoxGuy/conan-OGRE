@@ -23,6 +23,7 @@ class OGREConan(ConanFile):
                 installer.install("libx11-dev")
                 installer.install("libxt-dev")
                 installer.install("libxaw7-dev")
+                installer.install("libzzip-dev")
 
     def requirements(self):
         if os_info.is_windows:
