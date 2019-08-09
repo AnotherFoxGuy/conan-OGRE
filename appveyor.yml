@@ -20,22 +20,16 @@ environment:
           CONAN_ARCHS:            x86_64
 
 install:
+  - choco install wget -y
   - set PATH=%PATH%;%PYTHON%/Scripts/
   - pip.exe install conan --upgrade -q
   - pip.exe install conan_package_tools -q
   - conan user # It creates the conan data directory
-
-build_script:
-- ps: >-
-    iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
-
-    scoop bucket add Ash258 https://github.com/Ash258/scoop-Ash258.git
-
-    MsiExec.exe /passive /X{F0C3E5D1-1ADE-321E-8167-68EF0DE699A5}
-
-    MsiExec.exe /passive /X{1D8E6291-B0D5-35EC-8441-6616F567A0F7}
-
-    scoop install DirectX-SDK
+  - mkdir "C:\apps\Microsoft DirectX SDK" && cd "C:\apps\Microsoft DirectX SDK"
+  - wget -nv https://anotherfoxguy.com/Files/Microsoft_DirectX_SDK.7z
+  - 7z x Microsoft_DirectX_SDK.7z
+  - cd C:\projects\conan-ogre
 
 test_script:
+  - setx DXSDK_DIR "C:\apps\Microsoft DirectX SDK"
   - python build.py
