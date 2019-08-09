@@ -23,9 +23,10 @@ class OGREConan(ConanFile):
                 installer.install("libx11-dev")
                 installer.install("libxt-dev")
                 installer.install("libxaw7-dev")
-                
+
     def requirements(self):
-        self.requires.add('OGREdeps/2018-07@anotherfoxguy/stable')
+        if os_info.is_windows:
+            self.requires.add('OGREdeps/[20.x]@anotherfoxguy/stable')
 
     def source(self):
         git = tools.Git()
@@ -43,7 +44,7 @@ class OGREConan(ConanFile):
         tools.replace_in_file("CMake/Utils/FindPkgMacros.cmake",
             'set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})',
             'set(${PREFIX} ${${PREFIX}_REL} ${${PREFIX}_DBG})')
-        tools.replace_in_file("CMakeLists.txt", "# Set up the basic build environment", 
+        tools.replace_in_file("CMakeLists.txt", "# Set up the basic build environment",
                               '''
                               find_library(ZLIB_LIBRARY NAMES zlib zlib_d PATH_SUFFIXES lib)
                               find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib)
