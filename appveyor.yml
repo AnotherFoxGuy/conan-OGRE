@@ -3,7 +3,7 @@ build:                            false
 environment:
     PYTHON:                       "C:\\Python37"
 
-    CONAN_REFERENCE:              "OGRE/1.11.6-with-patches"
+    CONAN_REFERENCE:              "OGRE/1.12.1"
     CONAN_USERNAME:               "anotherfoxguy"
     CONAN_LOGIN_USERNAME:         "anotherfoxguy"
     CONAN_CHANNEL:                "testing"
