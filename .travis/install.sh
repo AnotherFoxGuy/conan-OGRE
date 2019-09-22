@@ -23,3 +23,5 @@ pip install conan --upgrade -q
 pip install conan_package_tools -q
 
 conan user
+conan remote add OGRE-deps https://api.bintray.com/conan/anotherfoxguy/OGRE-dependencies
+conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan

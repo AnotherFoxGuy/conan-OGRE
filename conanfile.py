@@ -1,6 +1,7 @@
 from conans import ConanFile, CMake, tools
 from conans.tools import os_info, SystemPackageTool
 
+
 class OGREConan(ConanFile):
     name = "OGRE"
     version = "1.12.2"
@@ -8,7 +9,7 @@ class OGREConan(ConanFile):
     url = "https://github.com/AnotherFoxGuy/conan-OGRE"
     description = "scene-oriented, flexible 3D engine written in C++"
     settings = "os", "compiler", "build_type", "arch"
-    generators = "cmake_paths"
+    generators = "cmake"
 
     def system_requirements(self):
         if os_info.is_linux:
@@ -28,29 +29,43 @@ class OGREConan(ConanFile):
 
     def requirements(self):
         if os_info.is_windows:
-            self.requires.add('OGREdeps/[20.x]@anotherfoxguy/stable')
+            self.requires.add('zlib/[1.x]@conan/stable')
+            self.requires.add('zziplib/[0.13.x]@AnotherFoxGuy/stable')
+            self.requires.add('freetype/[2.x]@bincrafters/stable')
+            self.requires.add('freeimage/[3.x]@AnotherFoxGuy/stable')
+            self.requires.add('GC/3.1@AnotherFoxGuy/stable')
+            self.requires.add('pugixml/[1.x]@bincrafters/stable')
 
     def source(self):
         git = tools.Git()
         git.clone("https://github.com/OGRECave/ogre.git", "v1.12.2")
-        tools.replace_in_file("CMakeLists.txt", "# OGRE BUILD SYSTEM","include(${CMAKE_BINARY_DIR}/conan_paths.cmake)")
+        if os_info.is_windows:
+            tools.replace_in_file("Components/Overlay/CMakeLists.txt", '"${FREETYPE_LIBRARIES}"', "CONAN_PKG::freetype")
+            tools.replace_in_file("Components/Overlay/CMakeLists.txt", "${FREETYPE_INCLUDE_DIRS}", "")
+
+        tools.replace_in_file("CMakeLists.txt", "# extra version info", '''
+                              include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+                              conan_basic_setup(TARGETS)''')
+
         tools.replace_in_file("CMake/Packages/FindFreeImage.cmake",
-            "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib)",
-            "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib libFreeImage)")
+                              "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib)",
+                              "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib libFreeImage)")
+
         tools.replace_in_file("CMake/Packages/FindZZip.cmake",
-            "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0)",
-            "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0 libzziplib)")
+                              "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0)",
+                              "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0 libzziplib)")
+
         tools.replace_in_file("CMake/Dependencies.cmake",
-            '''set(OGRE_DEPENDENCIES_DIR "" CACHE PATH "Path to prebuilt OGRE dependencies")''',
-            '''set(OGRE_DEPENDENCIES_DIR ${CMAKE_PREFIX_PATH})''')
+                              '''set(OGRE_DEPENDENCIES_DIR "" CACHE PATH "Path to prebuilt OGRE dependencies")''',
+                              '''set(OGRE_DEPENDENCIES_DIR ${CMAKE_PREFIX_PATH})''')
+
         tools.replace_in_file("CMake/Utils/FindPkgMacros.cmake",
-            'set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})',
-            'set(${PREFIX} ${${PREFIX}_REL} ${${PREFIX}_DBG})')
-        tools.replace_in_file("CMakeLists.txt", "# Set up the basic build environment",
-                              '''
-                              find_library(ZLIB_LIBRARY NAMES zlib zlib_d PATH_SUFFIXES lib)
-                              find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib)
-                              ''')
+                              'set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})',
+                              'set(${PREFIX} ${${PREFIX}_REL} ${${PREFIX}_DBG})')
+
+        tools.replace_in_file("CMakeLists.txt", "# Set up the basic build environment", '''
+find_library(ZLIB_LIBRARY NAMES zlib zlib_d PATH_SUFFIXES lib)
+find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib) ''')
 
     def build(self):
         cmake = CMake(self)
@@ -90,5 +105,5 @@ class OGREConan(ConanFile):
                                      'include/OGRE/Terrain',
                                      'include/OGRE/Threading',
                                      'include/OGRE/Volume'
-        ]
+                                     ]
         self.cpp_info.libs = tools.collect_libs(self)
