@@ -42,6 +42,10 @@ class OGREConan(ConanFile):
         if os_info.is_windows:
             tools.replace_in_file("Components/Overlay/CMakeLists.txt", '"${FREETYPE_LIBRARIES}"', "CONAN_PKG::freetype")
             tools.replace_in_file("Components/Overlay/CMakeLists.txt", "${FREETYPE_INCLUDE_DIRS}", "")
+            tools.replace_in_file("CMakeLists.txt", 'FreeImage_FOUND', 'TRUE')
+            tools.replace_in_file("PlugIns/FreeImageCodec/CMakeLists.txt", '${FreeImage_INCLUDE_DIR}', '')
+            tools.replace_in_file("PlugIns/FreeImageCodec/CMakeLists.txt", '${FreeImage_LIBRARIES}',
+                                  'CONAN_PKG::freeimage')
 
         tools.replace_in_file("CMakeLists.txt", "# extra version info", '''
                               include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
