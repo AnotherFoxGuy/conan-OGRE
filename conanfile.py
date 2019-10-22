@@ -4,7 +4,7 @@ from conans.tools import os_info, SystemPackageTool
 
 class OGREConan(ConanFile):
     name = "OGRE"
-    version = "1.12.2"
+    version = "1.12.3-dev"
     license = "MIT"
     url = "https://github.com/AnotherFoxGuy/conan-OGRE"
     description = "scene-oriented, flexible 3D engine written in C++"
@@ -38,7 +38,8 @@ class OGREConan(ConanFile):
 
     def source(self):
         git = tools.Git()
-        git.clone("https://github.com/OGRECave/ogre.git", "v1.12.2")
+        git.clone("https://github.com/OGRECave/ogre.git")
+        git.checkout("c210113455424a1727bf450a3dfbe0116034091c")
         if os_info.is_windows:
             tools.replace_in_file("Components/Overlay/CMakeLists.txt", '"${FREETYPE_LIBRARIES}"', "CONAN_PKG::freetype")
             tools.replace_in_file("Components/Overlay/CMakeLists.txt", "${FREETYPE_INCLUDE_DIRS}", "")
@@ -74,6 +75,7 @@ find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib) ''')
     def build(self):
         cmake = CMake(self)
         cmake.definitions['OGRE_BUILD_DEPENDENCIES'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_COMPONENT_OVERLAY_IMGUI'] = 'ON'
         cmake.definitions['OGRE_BUILD_COMPONENT_CSHARP'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_JAVA'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
