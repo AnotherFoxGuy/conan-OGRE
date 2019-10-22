@@ -40,6 +40,7 @@ class OGREConan(ConanFile):
         git = tools.Git()
         git.clone("https://github.com/OGRECave/ogre.git")
         git.checkout("c210113455424a1727bf450a3dfbe0116034091c")
+        git.run("submodule update --init --recursive")
         if os_info.is_windows:
             tools.replace_in_file("Components/Overlay/CMakeLists.txt", '"${FREETYPE_LIBRARIES}"', "CONAN_PKG::freetype")
             tools.replace_in_file("Components/Overlay/CMakeLists.txt", "${FREETYPE_INCLUDE_DIRS}", "")
