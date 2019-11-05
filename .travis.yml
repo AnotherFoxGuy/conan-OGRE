@@ -1,7 +1,7 @@
 
 env:
    global:
-     - CONAN_REFERENCE: "OGRE/1.12.2"
+     - CONAN_REFERENCE: "OGRE/1.12.3"
      - CONAN_USERNAME: "anotherfoxguy"
      - CONAN_LOGIN_USERNAME: "anotherfoxguy"
      - CONAN_CHANNEL: "testing"
