@@ -50,12 +50,14 @@ class OGREConan(ConanFile):
                               find_library(ZLIB_LIBRARY NAMES zlib zlib_d PATH_SUFFIXES lib)
                               find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib)
                               ''')
+        tools.replace_in_file("Samples/CMakeLists.txt", "if (Wix_FOUND)", "if (FALSE)")
+                              
         tools.patch(patch_string='''
 --- OgreMain/src/OgreScriptLexer.cpp
 +++ OgreMain/src/OgreScriptLexer.cpp
 @@ -82 +82 @@
-- return tokens;
-+ braceLayer = 1;
+-                        return tokens;
++                        braceLayer = 1;
              ''')
 
     def build(self):
