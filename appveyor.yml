@@ -10,12 +10,12 @@ environment:
     CONAN_UPLOAD:                 "https://api.bintray.com/conan/anotherfoxguy/ror-dependencies"
 
     matrix:
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-          CONAN_VISUAL_VERSIONS:  16
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS:  15
           CONAN_BUILD_TYPES:      Release
           CONAN_ARCHS:            x86_64
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-          CONAN_VISUAL_VERSIONS:  16
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS:  15
           CONAN_BUILD_TYPES:      Debug
           CONAN_ARCHS:            x86_64
 
@@ -24,18 +24,6 @@ install:
   - pip.exe install conan --upgrade -q
   - pip.exe install conan_package_tools -q
   - conan user # It creates the conan data directory
-
-build_script:
-- ps: >-
-    iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
-
-    scoop bucket add Ash258 https://github.com/Ash258/scoop-Ash258.git
-
-    MsiExec.exe /passive /X{F0C3E5D1-1ADE-321E-8167-68EF0DE699A5}
-
-    MsiExec.exe /passive /X{1D8E6291-B0D5-35EC-8441-6616F567A0F7}
-
-    scoop install DirectX-SDK
-
+  
 test_script:
   - python build.py
