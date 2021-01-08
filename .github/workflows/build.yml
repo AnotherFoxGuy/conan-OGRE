@@ -44,6 +44,8 @@ jobs:
           pip install conan --upgrade
           pip install conan_package_tools
           conan user
+          conan remote add OGRE-dependencies https://api.bintray.com/conan/anotherfoxguy/OGRE-dependencies
+          conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
       - name: Run build.py
         env:
           CONAN_BUILD_TYPES: ${{ matrix.buildType }}
