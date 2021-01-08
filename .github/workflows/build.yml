@@ -8,6 +8,7 @@ env:
   CONAN_UPLOAD: "https://api.bintray.com/conan/anotherfoxguy/ror-dependencies"
   CONAN_ARCHS: x86_64
   DXSDK_DIR: C:\apps\Microsoft DirectX SDK
+  CONAN_BUILD_POLICY: missing
 
 jobs:
   package:

@@ -41,22 +41,20 @@ class OGREConan(ConanFile):
         git.run("submodule update --init --recursive")
         if os_info.is_windows:
             tools.replace_in_file("Components/Overlay/CMakeLists.txt", '${FREETYPE_LIBRARIES}', "CONAN_PKG::freetype")
-            tools.replace_in_file("Components/Overlay/CMakeLists.txt", "${FREETYPE_INCLUDE_DIRS}", "")
             tools.replace_in_file("CMakeLists.txt", 'FreeImage_FOUND', 'TRUE')
-            tools.replace_in_file("PlugIns/FreeImageCodec/CMakeLists.txt", '${FreeImage_INCLUDE_DIR}', '')
-            tools.replace_in_file("PlugIns/FreeImageCodec/CMakeLists.txt", '${FreeImage_LIBRARIES}',
+            tools.replace_in_file("OgreMain/CMakeLists.txt", '${FreeImage_LIBRARIES}',
                                   'CONAN_PKG::freeimage')
 
-        tools.replace_in_file("CMakeLists.txt", "# extra version info", '''
-                              include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-                              conan_basic_setup(TARGETS)''')
+        tools.replace_in_file("CMakeLists.txt", "# Include necessary submodules", '''
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)''')
 
         tools.replace_in_file("CMake/Packages/FindFreeImage.cmake",
                               "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib)",
                               "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib libFreeImage)")
 
         tools.replace_in_file("CMake/Packages/FindZZip.cmake",
-                              "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0)",
+                              "set(ZZip_LIBRARY_NAMES zziplib zzip)",
                               "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0 libzziplib)")
 
         tools.replace_in_file("CMake/Dependencies.cmake",
@@ -85,7 +83,6 @@ find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib) ''')
         cmake.definitions['OGRE_BUILD_PLUGIN_STBI'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_BITES'] = 'ON'
         cmake.definitions['OGRE_BUILD_SAMPLES'] = 'OFF'
-        cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D9'] = 'ON'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D11'] = 'ON'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_GL3PLUS'] = 'OFF'
         cmake.definitions['OGRE_RESOURCEMANAGER_STRICT'] = 0
