@@ -4,7 +4,7 @@ from conans.tools import os_info, SystemPackageTool
 
 class OGREConan(ConanFile):
     name = "OGRE"
-    version = "1.12.10"
+    version = "2.2.4"
     license = "MIT"
     url = "https://github.com/AnotherFoxGuy/conan-OGRE"
     description = "scene-oriented, flexible 3D engine written in C++"
@@ -33,12 +33,11 @@ class OGREConan(ConanFile):
             self.requires.add('zziplib/[0.13.x]@AnotherFoxGuy/stable')
             self.requires.add('freetype/[2.x]@bincrafters/stable')
             self.requires.add('freeimage/[3.x]@AnotherFoxGuy/stable')
-            self.requires.add('GC/3.1@AnotherFoxGuy/stable')
             self.requires.add('pugixml/[1.x]@bincrafters/stable')
 
     def source(self):
         git = tools.Git()
-        git.clone("https://github.com/OGRECave/ogre.git", "v1.12.10")
+        git.clone("https://github.com/OGRECave/ogre-next.git", "v2.2.4")
         git.run("submodule update --init --recursive")
         if os_info.is_windows:
             tools.replace_in_file("Components/Overlay/CMakeLists.txt", '${FREETYPE_LIBRARIES}', "CONAN_PKG::freetype")
@@ -74,6 +73,10 @@ find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib) ''')
 
     def build(self):
         cmake = CMake(self)
+        cmake.definitions['OGRE_BUILD_DEPENDENCIES'] = 'OFF'
+        cmake.definitions['OGRE_USE_BOOST'] = '0'
+        cmake.definitions['OGRE_CONFIG_THREAD_PROVIDER'] = '0'
+        cmake.definitions['OGRE_CONFIG_THREADS'] = '0'
         cmake.definitions['OGRE_BUILD_DEPENDENCIES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_OVERLAY_IMGUI'] = 'ON'
         cmake.definitions['OGRE_BUILD_COMPONENT_CSHARP'] = 'OFF'

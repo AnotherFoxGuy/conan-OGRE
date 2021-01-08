@@ -1,0 +1,51 @@
+name: Build Conan package
+on: [push, pull_request]
+
+env:
+  CONAN_USERNAME: anotherfoxguy
+  CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+  CONAN_CHANNEL: "testing"
+  CONAN_UPLOAD: "https://api.bintray.com/conan/anotherfoxguy/ror-dependencies"
+  CONAN_ARCHS: x86_64
+  DXSDK_DIR: C:\apps\Microsoft DirectX SDK
+
+jobs:
+  package:
+    name: ${{ matrix.compiler.name }} ${{ matrix.compiler.version }} ${{ matrix.buildType }} - ${{ matrix.compiler.os }}
+    runs-on: ${{ matrix.compiler.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler:
+          - { name: "GCC", os: "ubuntu-20.04", version: "10" }
+          - { name: "GCC", os: "ubuntu-20.04", version: "9" }
+          - { name: "VISUAL", os: "windows-2019", version: "16" }
+          - { name: "VISUAL", os: "windows-2016", version: "15" }
+        buildType: ["Debug", "Release"]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
+
+      - name: Install Microsoft DirectX SDK
+        if: startsWith(matrix.compiler.os, 'windows')
+        shell: cmake -P {0}
+        run: |
+          file(MAKE_DIRECTORY $ENV{DXSDK_DIR})
+          file(DOWNLOAD https://vps.anotherfoxguy.com/ipfs/QmZm8WtxLxpmgxmYDTMPYjsbwmipr3KtrkPgGJoYiGBqhx "$ENV{TMP}/dl.zip" SHOW_PROGRESS)
+          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf "$ENV{TMP}/dl.zip" WORKING_DIRECTORY "$ENV{DXSDK_DIR}")
+
+      - name: Install gcc-multilib
+        if: startsWith(matrix.compiler.os, 'ubuntu')
+        run: sudo apt-get install -y gcc-multilib g++-multilib
+
+      - name: Install Conan
+        run: |
+          pip install conan --upgrade
+          pip install conan_package_tools
+          conan user
+      - name: Run build.py
+        env:
+          CONAN_BUILD_TYPES: ${{ matrix.buildType }}
+          CONAN_${{ matrix.compiler.name }}_VERSIONS: "${{ matrix.compiler.version }}"
+        run: python build.py
