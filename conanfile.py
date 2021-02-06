@@ -85,8 +85,11 @@ find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib) ''')
         cmake.definitions['OGRE_BUILD_SAMPLES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_D3D11'] = 'ON'
         cmake.definitions['OGRE_BUILD_RENDERSYSTEM_GL3PLUS'] = 'OFF'
-        cmake.definitions['OGRE_RESOURCEMANAGER_STRICT'] = 0
-        cmake.definitions['OGRE_INSTALL_SAMPLES'] = 'OFF'
+        cmake.definitions['OGRE_RESOURCEMANAGER_STRICT'] = 0 
+        cmake.definitions['OGRE_INSTALL_SAMPLES'] = 'OFF'   
+        cmake.definitions['OGRE_INSTALL_PDB'] = 'OFF'
+        cmake.definitions['OGRE_INSTALL_DOCS'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_SAMPLES2'] = 'OFF'
         if os_info.is_windows:
             cmake.definitions['CMAKE_CXX_FLAGS'] = '-D_OGRE_FILESYSTEM_ARCHIVE_UNICODE'
         cmake.configure()
