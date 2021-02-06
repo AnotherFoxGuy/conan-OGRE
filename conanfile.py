@@ -29,11 +29,11 @@ class OGREConan(ConanFile):
 
     def requirements(self):
         if os_info.is_windows:
-            self.requires.add('zlib/[1.x]@conan/stable')
-            self.requires.add('zziplib/[0.13.x]@AnotherFoxGuy/stable')
-            self.requires.add('freetype/[2.x]@bincrafters/stable')
+            self.requires.add('zlib/[1.x]')
+            self.requires.add('zziplib/[0.13.x]')
+            self.requires.add('freetype/[2.x]')
             self.requires.add('freeimage/[3.x]@AnotherFoxGuy/stable')
-            self.requires.add('pugixml/[1.x]@bincrafters/stable')
+            self.requires.add('pugixml/[1.x]')
 
     def source(self):
         git = tools.Git()

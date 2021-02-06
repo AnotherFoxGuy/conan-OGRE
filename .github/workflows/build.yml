@@ -18,10 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         compiler:
-          - { name: "GCC", os: "ubuntu-20.04", version: "10" }
           - { name: "GCC", os: "ubuntu-20.04", version: "9" }
           - { name: "VISUAL", os: "windows-2019", version: "16" }
-          - { name: "VISUAL", os: "windows-2016", version: "15" }
         buildType: ["Debug", "Release"]
 
     steps:
