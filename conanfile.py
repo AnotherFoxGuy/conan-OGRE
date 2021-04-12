@@ -29,48 +29,46 @@ class OGREConan(ConanFile):
 
     def requirements(self):
         if os_info.is_windows:
-            self.requires.add('zlib/[1.x]@conan/stable')
-            self.requires.add('zziplib/[0.13.x]@AnotherFoxGuy/stable')
-            self.requires.add('freetype/[2.x]@bincrafters/stable')
+            self.requires.add('zlib/[1.x]')
+            self.requires.add('zziplib/[0.13.x]')
+            self.requires.add('freetype/[2.x]')
             self.requires.add('freeimage/[3.x]@AnotherFoxGuy/stable')
             self.requires.add('GC/3.1@AnotherFoxGuy/stable')
-            self.requires.add('pugixml/[1.x]@bincrafters/stable')
+            self.requires.add('pugixml/[1.x]')
 
     def source(self):
-        git = tools.Git()
-        git.clone("https://github.com/OGRECave/ogre.git", "v1.12.10")
-        git.run("submodule update --init --recursive")
-        if os_info.is_windows:
-            tools.replace_in_file("Components/Overlay/CMakeLists.txt", '${FREETYPE_LIBRARIES}', "CONAN_PKG::freetype")
-            tools.replace_in_file("Components/Overlay/CMakeLists.txt", "${FREETYPE_INCLUDE_DIRS}", "")
-            tools.replace_in_file("CMakeLists.txt", 'FreeImage_FOUND', 'TRUE')
-            tools.replace_in_file("PlugIns/FreeImageCodec/CMakeLists.txt", '${FreeImage_INCLUDE_DIR}', '')
-            tools.replace_in_file("PlugIns/FreeImageCodec/CMakeLists.txt", '${FreeImage_LIBRARIES}',
-                                  'CONAN_PKG::freeimage')
+        with tools.chdir("source"):
+            if os_info.is_windows:
+                tools.replace_in_file("Components/Overlay/CMakeLists.txt", '${FREETYPE_LIBRARIES}', "CONAN_PKG::freetype")
+                tools.replace_in_file("Components/Overlay/CMakeLists.txt", "${FREETYPE_INCLUDE_DIRS}", "")
+                tools.replace_in_file("CMakeLists.txt", 'FreeImage_FOUND', 'TRUE')
+                tools.replace_in_file("PlugIns/FreeImageCodec/CMakeLists.txt", '${FreeImage_INCLUDE_DIR}', '')
+                tools.replace_in_file("PlugIns/FreeImageCodec/CMakeLists.txt", '${FreeImage_LIBRARIES}',
+                                    'CONAN_PKG::freeimage')
 
-        tools.replace_in_file("CMakeLists.txt", "# extra version info", '''
-                              include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-                              conan_basic_setup(TARGETS)''')
+            tools.replace_in_file("CMakeLists.txt", "# extra version info", '''
+                                include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+                                conan_basic_setup(TARGETS)''')
 
-        tools.replace_in_file("CMake/Packages/FindFreeImage.cmake",
-                              "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib)",
-                              "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib libFreeImage)")
+            tools.replace_in_file("CMake/Packages/FindFreeImage.cmake",
+                                "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib)",
+                                "set(FreeImage_LIBRARY_NAMES freeimage freeimageLib FreeImage FreeImageLib libFreeImage)")
 
-        tools.replace_in_file("CMake/Packages/FindZZip.cmake",
-                              "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0)",
-                              "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0 libzziplib)")
+            tools.replace_in_file("CMake/Packages/FindZZip.cmake",
+                                "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0)",
+                                "set(ZZip_LIBRARY_NAMES zziplib zzip zzip-0 libzziplib)")
 
-        tools.replace_in_file("CMake/Dependencies.cmake",
-                              '''set(OGRE_DEPENDENCIES_DIR "" CACHE PATH "Path to prebuilt OGRE dependencies")''',
-                              '''set(OGRE_DEPENDENCIES_DIR ${CMAKE_PREFIX_PATH})''')
+            tools.replace_in_file("CMake/Dependencies.cmake",
+                                '''set(OGRE_DEPENDENCIES_DIR "" CACHE PATH "Path to prebuilt OGRE dependencies")''',
+                                '''set(OGRE_DEPENDENCIES_DIR ${CMAKE_PREFIX_PATH})''')
 
-        tools.replace_in_file("CMake/Utils/FindPkgMacros.cmake",
-                              'set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})',
-                              'set(${PREFIX} ${${PREFIX}_REL} ${${PREFIX}_DBG})')
+            tools.replace_in_file("CMake/Utils/FindPkgMacros.cmake",
+                                'set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})',
+                                'set(${PREFIX} ${${PREFIX}_REL} ${${PREFIX}_DBG})')
 
-        tools.replace_in_file("CMakeLists.txt", "# Set up the basic build environment", '''
-find_library(ZLIB_LIBRARY NAMES zlib zlib_d PATH_SUFFIXES lib)
-find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib) ''')
+            tools.replace_in_file("CMakeLists.txt", "# Set up the basic build environment", '''
+    find_library(ZLIB_LIBRARY NAMES zlib zlib_d PATH_SUFFIXES lib)
+    find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib) ''')
 
     def build(self):
         cmake = CMake(self)
@@ -89,7 +87,7 @@ find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib) ''')
         cmake.definitions['OGRE_INSTALL_SAMPLES'] = 'OFF'
         if os_info.is_windows:
             cmake.definitions['CMAKE_CXX_FLAGS'] = '-D_OGRE_FILESYSTEM_ARCHIVE_UNICODE'
-        cmake.configure()
+        cmake.configure(source_folder="source")
         cmake.build()
 
     def package(self):
