@@ -4,12 +4,13 @@ from conans.tools import os_info, SystemPackageTool
 
 class OGREConan(ConanFile):
     name = "OGRE"
-    version = "1.12.10"
+    version = "1.12.11"
     license = "MIT"
     url = "https://github.com/AnotherFoxGuy/conan-OGRE"
     description = "scene-oriented, flexible 3D engine written in C++"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
+    exports_sources = "source/*"
 
     def system_requirements(self):
         if os_info.is_linux:
