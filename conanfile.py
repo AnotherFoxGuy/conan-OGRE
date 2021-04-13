@@ -4,12 +4,12 @@ from conans.tools import os_info, SystemPackageTool
 
 class OGREConan(ConanFile):
     name = "OGRE"
-    version = "1.11.6-with-patches"
+    version = "1.11.6.1"
     license = "MIT"
     url = "https://github.com/AnotherFoxGuy/conan-OGRE"
     description = "scene-oriented, flexible 3D engine written in C++"
     settings = "os", "compiler", "build_type", "arch"
-    exports_sources = "source*"
+    exports_sources = "source/*"
     generators = "cmake_paths"
 
     def system_requirements(self):
@@ -62,21 +62,11 @@ class OGREConan(ConanFile):
                 "CMakeLists.txt",
                 "# Set up the basic build environment",
                 """
-                                find_library(ZLIB_LIBRARY NAMES zlib zlib_d PATH_SUFFIXES lib)
-                                find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib)
-                                """,
+                find_library(ZLIB_LIBRARY NAMES zlib zlib_d PATH_SUFFIXES lib)
+                find_library(FREETYPE_LIBRARY NAMES freetype freetype_d PATH_SUFFIXES lib)
+                """,
             )
             tools.replace_in_file("Samples/CMakeLists.txt", "if (Wix_FOUND)", "if (FALSE)")
-                                
-            tools.patch(
-                patch_string="""
---- OgreMain/src/OgreScriptLexer.cpp
-+++ OgreMain/src/OgreScriptLexer.cpp
-@@ -82 +82 @@
--                        return tokens;
-+                        braceLayer = 1;
-"""
-            )
 
     def build(self):
         cmake = CMake(self)
@@ -100,7 +90,7 @@ class OGREConan(ConanFile):
     def package(self):
         cmake = CMake(self)
         cmake.install()
-
+        
     def package_info(self):
         self.cpp_info.includedirs = [
             "include",
